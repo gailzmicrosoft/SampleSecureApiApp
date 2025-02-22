@@ -1,6 +1,6 @@
 
 
-## Sample Rest API App (.NET 8 and C#)
+## Sample Secure Rest API App (.NET 8 and C#)
 
 #### Basic features 
 
@@ -14,11 +14,15 @@ Secure Rest APIs hosted in Azure App Service. This is a sample architecture that
 
 (3) Save mortgage loan application into Azure Blob Storage and Azure Cosmos DB
 
-#### How to Deploy and Test 
+#### Deploy the architecture with connectivity and security 
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgailzmicrosoft%2FSampleSecureApiApp%2Fmain%2FDeployment%2Fmain.json)
 
-**Deploy Code from Local**
+**Deploy Code from GitHub**
+
+In your local solution directory, change directory to **Deployment**. Run PowerShell script `deploy_zipfile_github.ps1`. It downloads the sample_app.zip file in Deployment directory, saves a temp file (remove it afterwards), and then deploy the temp file (.zip) to App Services.  
+
+**Deploy Code from Local - if you have cloned and updated the code**
 
 In your local solution directory, change directory to **Deployment**. Run PowerShell script `build_zipfile.ps1` to rebuild the solution. Run `deploy_zipfile_local.ps1`  to deploy the new code as .zip file to your app service instance. 
 
@@ -30,6 +34,3 @@ Find the URL of your APP Service in Azure. The API Key is stored in your App Con
 
 If you downloaded or cloned the code locally and want to test the code locally first. You need to set up key vault policy to allow you to read the key and secret in the key vault. 
 
-**Deploy Code from GitHub - Under construction**
-
-In your local solution directory, change directory to **Deployment**. Run PowerShell script `deploy_zipfile_github.ps1`. This step is being automated by the 'Deploy to Azure' (under construction and test). In future this step will not be needed. The code kept as debugging script. 
