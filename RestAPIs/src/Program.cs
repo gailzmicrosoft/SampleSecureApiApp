@@ -50,6 +50,7 @@ namespace RestAPIs
             var formRecognizerEndpoint = secretClient.GetSecret("form-recognizer-endpoint").Value.Value;
             var formRecognizerKey = secretClient.GetSecret("form-recognizer-key").Value.Value;
             var cosmosDbEndpoint = secretClient.GetSecret("cosmos-db-endpoint").Value.Value;
+            var cosmosDbAccountKey = secretClient.GetSecret("cosmos-db-account-key").Value.Value;
             var cosmosDbName = secretClient.GetSecret("cosmos-db-name").Value.Value;
             var cosmosDbContainerName = secretClient.GetSecret("cosmos-db-container-name").Value.Value;
             var apiKey = secretClient.GetSecret("x-api-key").Value.Value;
@@ -60,6 +61,7 @@ namespace RestAPIs
             builder.Configuration["form-recognizer-endpoint"] = formRecognizerEndpoint;
             builder.Configuration["form-recognizer-key"] = formRecognizerKey;
             builder.Configuration["cosmos-db-endpoint"] = cosmosDbEndpoint;
+            builder.Configuration["cosmos-db-account-key"] = cosmosDbAccountKey;
             builder.Configuration["cosmos-db-name"] = cosmosDbName;
             builder.Configuration["cosmos-db-container-name"] = cosmosDbContainerName;
             builder.Configuration["x-api-key"] = apiKey;

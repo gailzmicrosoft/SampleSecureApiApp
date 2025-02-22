@@ -139,6 +139,15 @@ resource kvsCosmosDbEp 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
     value: string(cosmosDbEndpoint)
   }
 }
+// Create a secret in the Key Vault for the Cosmos DB account key
+resource kvsCosmosDbAccountKey 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'cosmos-db-account-key'
+  properties: {
+    value: listKeys(cosmosDbAccount.id, '2024-11-15').primaryMasterKey
+  }
+}
+
 resource kvsCosmosDbName 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
   parent: keyVault
   name: 'cosmos-db-name'

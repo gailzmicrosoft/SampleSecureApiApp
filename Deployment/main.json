@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.33.93.31351",
-      "templateHash": "15400886624756608836"
+      "templateHash": "11558923813226531961"
     }
   },
   "parameters": {
@@ -162,6 +162,18 @@
       "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'cosmos-db-endpoint')]",
       "properties": {
         "value": "[string(reference(resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix')))), '2024-11-15').documentEndpoint)]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'cosmos-db-account-key')]",
+      "properties": {
+        "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix')))), '2024-11-15').primaryMasterKey]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))))]",

@@ -26,6 +26,7 @@ namespace RestAPIs.Controllers
         private readonly string _blobContainerName;
         private readonly CosmosClient _cosmosClient;
         private readonly string _cosmosAcountEndPoint;
+        private readonly string _cosmosDatabaseAccountKey;
         private readonly string _cosmosDatabaseName;
         private readonly string _cosmosContainerName;
 
@@ -70,10 +71,11 @@ namespace RestAPIs.Controllers
 
             // Set up access to Cosmos DB Access 
             _cosmosAcountEndPoint = _configuration.GetValue<string>("cosmos-db-endpoint") ?? throw new ArgumentNullException(nameof(_cosmosAcountEndPoint));
+            _cosmosDatabaseAccountKey = _configuration.GetValue<string>("cosmos-db-account-key") ?? throw new ArgumentNullException(nameof(_cosmosDatabaseAccountKey));
             _cosmosDatabaseName = _configuration.GetValue<string>("cosmos-db-name") ?? throw new ArgumentNullException(nameof(_cosmosDatabaseName));
             _cosmosContainerName = _configuration.GetValue<string>("cosmos-db-container-name") ?? throw new ArgumentNullException(nameof(_cosmosContainerName));
-            _cosmosClient = new CosmosClient(_cosmosAcountEndPoint, credential);
-
+            //_cosmosClient = new CosmosClient(_cosmosAcountEndPoint, credential);
+            _cosmosClient = new CosmosClient(_cosmosAcountEndPoint, _cosmosDatabaseAccountKey);
         }
 
         [HttpPost("SubmitLoanApplication")]
