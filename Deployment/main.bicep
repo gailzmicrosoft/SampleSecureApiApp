@@ -301,36 +301,36 @@ resource roleAssignmentStorageBlob 'Microsoft.Authorization/roleAssignments@2022
 
 
 
-///*******************************************************************************************************************/
-// Below role assignment may not needed as App Service Identity is already assigned the Contributor role for the Resource Group
-/*********************************************************************************************************************/
+// ///*******************************************************************************************************************/
+// // Below role assignment may not needed as App Service Identity is already assigned the Contributor role for the Resource Group
+// /*********************************************************************************************************************/
 
-/**************************************************************************/
-// Create user-assigned managed identity for the resource group
-/**************************************************************************/
-resource rg_user_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: '${resourcePrefixUser}_rg_user_identity'
-  location: location
-}
+// /**************************************************************************/
+// // Create user-assigned managed identity for the resource group
+// /**************************************************************************/
+// resource rg_user_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+//   name: '${resourcePrefixUser}_rg_user_identity'
+//   location: location
+// }
 
-/**************************************************************************/
-// Assign CosmosDB Account Contributor to rg_user_identity 
-/**************************************************************************/
-//var cosmosDbContributorRoleID = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
-var cosmosDbContributorRoleID = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
+// /**************************************************************************/
+// // Assign CosmosDB Account Contributor to rg_user_identity 
+// /**************************************************************************/
+// //var cosmosDbContributorRoleID = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+// var cosmosDbContributorRoleID = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
 
-resource rgIdroleAssignmentCustomRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(rg_user_identity.id, 'cosmosDbContributorRoleID')
-  scope: resourceGroup()
-  properties: {
-    roleDefinitionId:cosmosDbContributorRoleID
-    principalId: rg_user_identity.properties.principalId
-    principalType: 'ServicePrincipal'
-  }
-  dependsOn: [
-    cosmosDbAccount
-  ]
-}
+// resource rgIdroleAssignmentCustomRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(rg_user_identity.id, 'cosmosDbContributorRoleID')
+//   scope: resourceGroup()
+//   properties: {
+//     roleDefinitionId:cosmosDbContributorRoleID
+//     principalId: rg_user_identity.properties.principalId
+//     principalType: 'ServicePrincipal'
+//   }
+//   dependsOn: [
+//     cosmosDbAccount
+//   ]
+// }
 
 
 
