@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.33.93.31351",
-      "templateHash": "5635466691394887730"
+      "templateHash": "10291037218969949327"
     }
   },
   "parameters": {
@@ -118,113 +118,112 @@
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}AppConfig', variables('resourcePrefix'))]",
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}KeyVault', variables('resourcePrefix'))]",
       "location": "[variables('location')]",
-      "sku": {
-        "name": "Standard"
-      },
-      "properties": {},
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', format('{0}storage', toLower(variables('resourcePrefix'))), 'default', 'mortgageapp')]",
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))), 'LoanAppDatabase', 'LoanAppDataContainer')]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix')))]"
-      ]
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "tenantId": "[subscription().tenantId]",
+        "accessPolicies": []
+      }
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'azure-storage-account-name')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'azure-storage-account-name')]",
       "properties": {
         "value": "[format('{0}storage', toLower(variables('resourcePrefix')))]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]",
         "[resourceId('Microsoft.Storage/storageAccounts', format('{0}storage', toLower(variables('resourcePrefix'))))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'azure-storage-blob-container-name')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'azure-storage-blob-container-name')]",
       "properties": {
         "value": "mortgageapp"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', format('{0}storage', toLower(variables('resourcePrefix'))), 'default', 'mortgageapp')]"
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', format('{0}storage', toLower(variables('resourcePrefix'))), 'default', 'mortgageapp')]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'cosmos-db-endpoint')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'cosmos-db-endpoint')]",
       "properties": {
         "value": "[string(reference(resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix')))), '2024-11-15').documentEndpoint)]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))))]"
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'cosmos-db-name')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'cosmos-db-name')]",
       "properties": {
         "value": "LoanAppDatabase"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))), 'LoanAppDatabase')]"
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))), 'LoanAppDatabase')]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'cosmos-db-container-name')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'cosmos-db-container-name')]",
       "properties": {
         "value": "LoanAppDataContainer"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))), 'LoanAppDatabase', 'LoanAppDataContainer')]"
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))), 'LoanAppDatabase', 'LoanAppDataContainer')]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'form-recognizer-endpoint')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'form-recognizer-endpoint')]",
       "properties": {
         "value": "[string(reference(resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix'))), '2021-04-30').endpoint)]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix')))]"
+        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'form-recognizer-key')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'form-recognizer-key')]",
       "properties": {
         "value": "[string(listKeys(resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix'))), '2021-04-30').key1)]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix')))]"
+        "[resourceId('Microsoft.CognitiveServices/accounts', format('{0}FormRecognizer', variables('resourcePrefix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
-      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-      "apiVersion": "2024-05-01",
-      "name": "[format('{0}/{1}', format('{0}AppConfig', variables('resourcePrefix')), 'x-api-key')]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'x-api-key')]",
       "properties": {
         "value": "AppConfigApiKey"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]"
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {
@@ -267,12 +266,8 @@
               "value": "Release"
             },
             {
-              "name": "APP_CONFIG_ENDPOINT",
-              "value": "[reference(resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix'))), '2024-05-01').endpoint]"
-            },
-            {
-              "name": "AppConfigConnectionString",
-              "value": "[format('Endpoint={0};Id={1};Secret={2}', reference(resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix'))), '2024-05-01').endpoint, resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix'))), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix'))), '2024-05-01').value[0])]"
+              "name": "KEY_VAULT_URI",
+              "value": "[reference(resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix'))), '2022-11-01').vaultUri]"
             }
           ],
           "healthCheckPath": "/health"
@@ -282,8 +277,31 @@
         "type": "SystemAssigned"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}AppConfig', variables('resourcePrefix')))]",
-        "[resourceId('Microsoft.Web/serverfarms', format('{0}AppServicePlan', variables('resourcePrefix')))]"
+        "[resourceId('Microsoft.Web/serverfarms', format('{0}AppServicePlan', variables('resourcePrefix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/accessPolicies",
+      "apiVersion": "2022-11-01",
+      "name": "[format('{0}/{1}', format('{0}KeyVault', variables('resourcePrefix')), 'add')]",
+      "properties": {
+        "accessPolicies": [
+          {
+            "tenantId": "[subscription().tenantId]",
+            "objectId": "[reference(resourceId('Microsoft.Web/sites', format('{0}AppService', variables('resourcePrefix'))), '2024-04-01', 'full').identity.principalId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', format('{0}AppService', variables('resourcePrefix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}KeyVault', variables('resourcePrefix')))]"
       ]
     },
     {

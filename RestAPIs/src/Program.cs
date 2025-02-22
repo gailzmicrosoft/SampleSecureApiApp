@@ -78,10 +78,10 @@ namespace RestAPIs
            
             // You need to configure Azure App Configuration with managed identity already for access 
             //var connectionString = builder.Configuration["AppConfig:ConnectionString"]; // This syntax was not allowed in BICEP
-            var connectionString = builder.Configuration["AppConfigConnectionString"];
+            var connectionString = builder.Configuration["KEY_VAULT_URI"];
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new ArgumentNullException(nameof(connectionString), "AppConfigConnectionString not set in the configuration.");
+                throw new ArgumentNullException(nameof(connectionString), "KEY_VAULT_URI not set in the configuration.");
             }
 
             builder.Configuration.AddAzureAppConfiguration(options =>
@@ -89,14 +89,14 @@ namespace RestAPIs
                 options.Connect(connectionString);
             });
 
-            //// If you want to integrate App Configuration with Key Vault 
-            //builder.Configuration.AddAzureAppConfiguration(options =>
-            //{
-            //    options.Connect(connectionString).ConfigureKeyVault(kv =>
-            //    {
-            //        kv.SetCredential(new DefaultAzureCredential());
-            //    });
-            //});
+            // If you want to integrate App Configuration with Key Vault 
+            builder.Configuration.AddAzureAppConfiguration(options =>
+            {
+                options.Connect(connectionString).ConfigureKeyVault(kv =>
+                {
+                    kv.SetCredential(new DefaultAzureCredential());
+                });
+            });
 
             var app = builder.Build();
      

@@ -101,80 +101,80 @@ var formRecognizerEndpoint = formRecognizer.properties.endpoint
 var formRecognizerKey = listKeys(formRecognizer.id, '2021-04-30').key1
 
 
+
 /**************************************************************************/
-// appConfig and appConfig Key Value Pairs
+// Create a Key Vault
 /**************************************************************************/
-resource appConfig 'Microsoft.AppConfiguration/configurationStores@2024-05-01' = {
-  name: '${resourcePrefix}AppConfig'
+resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
+  name: '${resourcePrefix}KeyVault'
   location: location
-  sku: {
-    name: 'Standard'
-  }
-  properties: {}
-  dependsOn: [
-    blobContainer
-    formRecognizer
-    cosmosDbContainer
-  ]
-}
-/*****************************  Key Value Pairs ***************************/
-resource appConfigKeyAzureStorageName 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'azure-storage-account-name'
   properties: {
-     value: storageAccount.name
-  }
-}
-resource appConfigKeyBlobContainer 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'azure-storage-blob-container-name'
-  properties: {
-     value: blobContainer.name
-  }
-}
-resource appConfigKeyCosmosDbEp 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'cosmos-db-endpoint'
-  properties: {
-     value: string(cosmosDbEndpoint)
-  }
-}
-resource appConfigKeyCosmosDbName 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'cosmos-db-name'
-  properties: {
-     value: cosmosDbDatabase.name
-  }
-}
-resource appConfigKeyCosmosDbContainer 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'cosmos-db-container-name'
-  properties: {
-     value: cosmosDbContainer.name
-  }
-}
-resource appConfigKeyFormRecognizerEp 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'form-recognizer-endpoint'
-  properties: {
-     value: string(formRecognizerEndpoint)
-  }
-}
-resource appConfigKeyFormRecognizerKey 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'form-recognizer-key'
-  properties: {
-     value: string(formRecognizerKey)
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: subscription().tenantId
+    accessPolicies: []
   }
 }
 
-resource appConfigKeyApiKey 'Microsoft.AppConfiguration/configurationStores/keyValues@2024-05-01' = {
-  parent: appConfig
-  name: 'x-api-key'
+resource kvsStorageAccountName 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'azure-storage-account-name'
   properties: {
-     value:'AppConfigApiKey'
+    value: storageAccount.name
   }
 }
+resource kvsBlobContainer 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'azure-storage-blob-container-name'
+  properties: {
+    value: blobContainer.name
+  }
+}
+resource kvsCosmosDbEp 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'cosmos-db-endpoint'
+  properties: {
+    value: string(cosmosDbEndpoint)
+  }
+}
+resource kvsCosmosDbName 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'cosmos-db-name'
+  properties: {
+    value: cosmosDbDatabase.name
+  }
+}
+resource kvsCosmosDbContainer 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'cosmos-db-container-name'
+  properties: {
+    value: cosmosDbContainer.name
+  }
+}
+resource kvsFormRecognizerEp 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'form-recognizer-endpoint'
+  properties: {
+    value: string(formRecognizerEndpoint)
+  }
+}
+resource kvsFormRecognizerKey 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'form-recognizer-key'
+  properties: {
+    value: string(formRecognizerKey)
+  }
+}
+resource kvsApiKey 'Microsoft.KeyVault/vaults/secrets@2022-11-01' = {
+  parent: keyVault
+  name: 'x-api-key'
+  properties: {
+    value:'AppConfigApiKey'
+  }
+}
+
 
 /**************************************************************************/
 // App Service Plan and App Service
@@ -218,12 +218,8 @@ resource appService 'Microsoft.Web/sites@2024-04-01' = {
           value:'Release'
         }
         {
-          name:'APP_CONFIG_ENDPOINT'
-          value: appConfig.properties.endpoint
-        }
-        {
-          name:'AppConfigConnectionString'
-          value:'Endpoint=${appConfig.properties.endpoint};Id=${appConfig.id};Secret=${listKeys(appConfig.id, '2024-05-01').value[0]}'
+          name:'KEY_VAULT_URI'
+          value: keyVault.properties.vaultUri
         }
       ]
       healthCheckPath:'/health' // Add this line to enable health check
@@ -234,6 +230,28 @@ resource appService 'Microsoft.Web/sites@2024-04-01' = {
   }
 }
 
+
+/**************************************************************************/
+// Assign Key Vault Access Policy to App Service
+/**************************************************************************/
+resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2022-11-01' = {
+  name:'add'
+  parent: keyVault
+  properties: {
+    accessPolicies: [
+      {
+        tenantId: subscription().tenantId
+        objectId: appService.identity.principalId
+        permissions: {
+          secrets: [
+            'get'
+            'list'
+          ]
+        }
+      }
+    ]
+  }
+}
 
 
 /**************************************************************************/
