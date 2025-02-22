@@ -33,7 +33,43 @@ namespace RestAPIs
                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                .AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: true);
             }
-           
+
+            // Retrieve secrets from Azure Key Vault
+            var keyVaultUri = builder.Configuration["KEY_VAULT_URI"];
+            if (string.IsNullOrEmpty(keyVaultUri))
+            {
+                throw new ArgumentNullException(nameof(keyVaultUri), "KEY_VAULT_URI not set in the configuration.");
+            }
+
+            // Create a SecretClient to access the Key Vault
+            var secretClient = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
+
+            // Retrieve secrets
+            var azureStorageAccountName = secretClient.GetSecret("azure-storage-account-name").Value.Value;
+            var azureStorageBlobContainerName = secretClient.GetSecret("azure-storage-blob-container-name").Value.Value;
+            var formRecognizerEndpoint = secretClient.GetSecret("form-recognizer-endpoint").Value.Value;
+            var formRecognizerKey = secretClient.GetSecret("form-recognizer-key").Value.Value;
+            var cosmosDbEndpoint = secretClient.GetSecret("cosmos-db-endpoint").Value.Value;
+            var cosmosDbName = secretClient.GetSecret("cosmos-db-name").Value.Value;
+            var cosmosDbContainerName = secretClient.GetSecret("cosmos-db-container-name").Value.Value;
+            var apiKey = secretClient.GetSecret("x-api-key").Value.Value;
+
+            // Add secrets to configuration
+            builder.Configuration["azure-storage-account-name"] = azureStorageAccountName;
+            builder.Configuration["azure-storage-blob-container-name"] = azureStorageBlobContainerName;
+            builder.Configuration["form-recognizer-endpoint"] = formRecognizerEndpoint;
+            builder.Configuration["form-recognizer-key"] = formRecognizerKey;
+            builder.Configuration["cosmos-db-endpoint"] = cosmosDbEndpoint;
+            builder.Configuration["cosmos-db-name"] = cosmosDbName;
+            builder.Configuration["cosmos-db-container-name"] = cosmosDbContainerName;
+            builder.Configuration["x-api-key"] = apiKey;
+
+
+            //// Add Application Insights telemetry
+            //builder.Services.AddApplicationInsightsTelemetry(options =>
+            //{
+            //    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+            //});
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -69,34 +105,7 @@ namespace RestAPIs
             });
 
 
-            //// Add Application Insights telemetry
-            //builder.Services.AddApplicationInsightsTelemetry(options =>
-            //{
-            //    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
-            //});
-
-           
-            // You need to configure Azure App Configuration with managed identity already for access 
-            //var connectionString = builder.Configuration["AppConfig:ConnectionString"]; // This syntax was not allowed in BICEP
-            var connectionString = builder.Configuration["KEY_VAULT_URI"];
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                throw new ArgumentNullException(nameof(connectionString), "KEY_VAULT_URI not set in the configuration.");
-            }
-
-            builder.Configuration.AddAzureAppConfiguration(options =>
-            {
-                options.Connect(connectionString);
-            });
-
-            // If you want to integrate App Configuration with Key Vault 
-            builder.Configuration.AddAzureAppConfiguration(options =>
-            {
-                options.Connect(connectionString).ConfigureKeyVault(kv =>
-                {
-                    kv.SetCredential(new DefaultAzureCredential());
-                });
-            });
+          
 
             var app = builder.Build();
      

@@ -16,7 +16,7 @@
       }
     }
   },
-  "AppConfig__ConnectionString": "Endpoint=https://youtappconfig.azconfig.io;Id=yourID;Secret=CwJQQJ99BBAC1",
+  "KEY_VAULT_URI": "https://yourvault.vault.azure.net/",
   "AllowedHosts": "*"
 }
    

@@ -291,6 +291,41 @@ resource roleAssignmentStorageBlob 'Microsoft.Authorization/roleAssignments@2022
 
 
 
+
+///*******************************************************************************************************************/
+// Below role assignment may not needed as App Service Identity is already assigned the Contributor role for the Resource Group
+/*********************************************************************************************************************/
+
+/**************************************************************************/
+// Create user-assigned managed identity for the resource group
+/**************************************************************************/
+resource rg_user_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: '${resourcePrefixUser}_rg_user_identity'
+  location: location
+}
+
+/**************************************************************************/
+// Assign CosmosDB Account Contributor to rg_user_identity 
+/**************************************************************************/
+//var cosmosDbContributorRoleID = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+var cosmosDbContributorRoleID = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
+
+resource rgIdroleAssignmentCustomRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(rg_user_identity.id, 'cosmosDbContributorRoleID')
+  scope: resourceGroup()
+  properties: {
+    roleDefinitionId:cosmosDbContributorRoleID
+    principalId: rg_user_identity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+  dependsOn: [
+    cosmosDbAccount
+  ]
+}
+
+
+
+
 /**************************************************************************/
 // Deploy Code (.zip file) to App Service using deploymentScripts
 /**************************************************************************/
@@ -359,41 +394,4 @@ resource roleAssignmentStorageBlob 'Microsoft.Authorization/roleAssignments@2022
 
 
 
-
-
-///*******************************************************************************************************************/
-// Below role assignment are not needed as App Service Identity is already assigned the Contributor role for the Resource Group
-/*********************************************************************************************************************/
-
-// /**************************************************************************/
-// // Create user-assigned managed identity for the resource group
-// /**************************************************************************/
-// resource rg_user_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-//   name: '${resourcePrefixUser}_rg_user_identity'
-//   location: location
-// }
-
-// /**************************************************************************/
-// // Assign CosmosDB Account Contributor to rg_user_identity 
-// /**************************************************************************/
-// //var cosmosDbContributorRoleID = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
-
-// //"id": "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
-// var cosmosDbContributorRoleID = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
-
-// resource rgIdroleAssignmentCustomRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//   name: guid(rg_user_identity.id, 'cosmosDbContributorRoleID')
-//   scope: resourceGroup()
-//   properties: {
-//     //roleDefinitionId: '${subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/${cosmosDbContributorRoleID}'
-//     roleDefinitionId:cosmosDbContributorRoleID
-//     principalId: rg_user_identity.properties.principalId
-//     principalType: 'ServicePrincipal'
-//     //scope: cosmosDbAccount.id
-//    // scope: resourceGroup().id
-//   }
-//   dependsOn: [
-//     cosmosDbAccount
-//   ]
-// }
 

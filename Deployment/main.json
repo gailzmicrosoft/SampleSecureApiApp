@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.33.93.31351",
-      "templateHash": "10291037218969949327"
+      "templateHash": "15400886624756608836"
     }
   },
   "parameters": {
@@ -23,7 +23,8 @@
     "resourcePrefix": "[format('{0}{1}', variables('trimmedResourcePrefixUser'), variables('uniString'))]",
     "location": "[resourceGroup().location]",
     "resourceGroupContributorRoleID": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-    "storageBlobDataContributorRoleID": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]"
+    "storageBlobDataContributorRoleID": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+    "cosmosDbContributorRoleID": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
   },
   "resources": [
     {
@@ -328,6 +329,26 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', format('{0}AppService', variables('resourcePrefix')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2023-01-31",
+      "name": "[format('{0}_rg_user_identity', parameters('resourcePrefixUser'))]",
+      "location": "[variables('location')]"
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}_rg_user_identity', parameters('resourcePrefixUser'))), 'cosmosDbContributorRoleID')]",
+      "properties": {
+        "roleDefinitionId": "[variables('cosmosDbContributorRoleID')]",
+        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}_rg_user_identity', parameters('resourcePrefixUser'))), '2023-01-31').principalId]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', format('{0}cosmosdbaccount', toLower(variables('resourcePrefix'))))]",
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('{0}_rg_user_identity', parameters('resourcePrefixUser')))]"
       ]
     }
   ]
