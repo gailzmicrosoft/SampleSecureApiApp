@@ -26,15 +26,10 @@ namespace RestAPIs.Middleware
                 await context.Response.WriteAsync("Api Key x-api-key was not provided.");
                 return;
             }
-
-            ///************************************* appsettings.json *************************/
-            //var appSettings = context.RequestServices.GetRequiredService<IConfiguration>();
-            //var apiKey = appSettings.GetValue<string>(APIKEYNAME);
-
-            /******************************** App Configuration *******************/
-            // Retrieve the API key from the configuration
+            // Retrieve the API key created by bicep scriptand stored in Azure Key Vault
+            // It was later loaded to the configuration in Program.cs
+            // You can change the key in key vault if you have the permission. 
             var apiKey = _configuration.GetValue<string>(APIKEYNAME);
-
 
             if (apiKey == null || (!apiKey.Equals(extractedApiKey)))
             {

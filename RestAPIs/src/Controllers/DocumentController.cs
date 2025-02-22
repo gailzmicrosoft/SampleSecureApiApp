@@ -34,9 +34,9 @@ namespace RestAPIs.Controllers
 
             // Retrieve Form Recognizer Endpoint and API Key from the configuration
             _formRecognizerEndpoint = _configuration.GetValue<string>("form-recognizer-endpoint")
-                                      ?? throw new ArgumentNullException("form-recognizer-endpoint is not set in the configuration.");
+                                      ?? throw new ArgumentNullException("form-recognizer-endpoint is not set.");
             _formRecognizerApiKey = _configuration.GetValue<string>("form-recognizer-key")
-                                    ?? throw new ArgumentNullException("form-recognizer-key is not set in the configuration.");
+                                    ?? throw new ArgumentNullException("form-recognizer-key is not set.");
         }
 
         [HttpGet("GetModels")]

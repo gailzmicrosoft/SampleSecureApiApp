@@ -36,7 +36,7 @@ namespace RestAPIs
             var keyVaultUri = builder.Configuration["KEY_VAULT_URI"];
             if (string.IsNullOrEmpty(keyVaultUri))
             {
-                throw new ArgumentNullException(nameof(keyVaultUri), "KEY_VAULT_URI not set in the configuration.");
+                throw new ArgumentNullException(nameof(keyVaultUri), "KEY_VAULT_URI not set.");
             }
 
             // Create a SecretClient to access the Key Vault

@@ -35,7 +35,7 @@ namespace RestAPIs.Controllers
             _logger = logger;
             _configuration = configuration;
 
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var environment = Environment.GetEnvironmentVariable("ENVIRONMENT");
             _logger.LogInformation($"Current environment: {environment}");
 
             TokenCredential credential;
@@ -55,26 +55,16 @@ namespace RestAPIs.Controllers
             _blobContainerName = _configuration.GetValue<string>("azure-storage-blob-container-name") ?? throw new ArgumentNullException(nameof(_blobContainerName));
             _blobServiceClient = new BlobServiceClient(new Uri(_azureStorageEndPoint), credential);
 
-            // Cosmos DB NoSQL database setup
+            //Cosmos DB NoSQL database setup was created in deployment script main.bicep
             //Database Name: LoanAppDatabase
             //Container Name: LoanAppDataContainer
             //Partition key: /LoanAppDataId
-            // Permissions to assign to the managed identity:
-            // Cosmos DB Account Contributor
-            // Cosmos DB Account Reader Role
-            // DocumentDB Account Contributor Role
-            // Cosmos DB Operator
-            //*************** For the web app to work, I added Contributor role for the scope of RG for App Service (Preview)  ***************/
-            // Also added a custom role which is quite a bit more work! It seems this is the only role that may be needed. Reference doc here: 
-            // https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/security/how-to-grant-data-plane-role-based-access?tabs=built-in-definition%2Ccsharp&pivots=azure-interface-cli
 
-
-            // Set up access to Cosmos DB Access 
+            // Set up access to Cosmos DB Access client
             _cosmosAcountEndPoint = _configuration.GetValue<string>("cosmos-db-endpoint") ?? throw new ArgumentNullException(nameof(_cosmosAcountEndPoint));
             _cosmosDatabaseAccountKey = _configuration.GetValue<string>("cosmos-db-account-key") ?? throw new ArgumentNullException(nameof(_cosmosDatabaseAccountKey));
             _cosmosDatabaseName = _configuration.GetValue<string>("cosmos-db-name") ?? throw new ArgumentNullException(nameof(_cosmosDatabaseName));
             _cosmosContainerName = _configuration.GetValue<string>("cosmos-db-container-name") ?? throw new ArgumentNullException(nameof(_cosmosContainerName));
-            //_cosmosClient = new CosmosClient(_cosmosAcountEndPoint, credential);
             _cosmosClient = new CosmosClient(_cosmosAcountEndPoint, _cosmosDatabaseAccountKey);
         }
 
