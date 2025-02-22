@@ -14,11 +14,7 @@ namespace RestAPIs
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Configuration.AddEnvironmentVariables(); //
-            //builder.Configuration.AddCommandLine(args); // Add command line arguments to configuration
-            //builder.Configuration.AddUserSecrets<Program>(); // Add user secrets to configuration
-
-
-
+     
             // Load environment-specific appsettings.json
             var environment = builder.Configuration["ENVIRONMENT"];
             if (string.IsNullOrEmpty(environment))
@@ -34,6 +30,8 @@ namespace RestAPIs
                .AddJsonFile($"appsettings.{environment}.json", optional: false, reloadOnChange: true);
             }
 
+            // For local testing, you need to set your access to key vault 
+            // by adding new policy to allow you to have get, list, and update acess to key and secrets.
             // Retrieve secrets from Azure Key Vault
             var keyVaultUri = builder.Configuration["KEY_VAULT_URI"];
             if (string.IsNullOrEmpty(keyVaultUri))
