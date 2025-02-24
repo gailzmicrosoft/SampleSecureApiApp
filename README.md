@@ -14,6 +14,10 @@ Secure Rest APIs hosted in Azure App Service. This is a sample architecture that
 
 (3) Save mortgage loan application into Azure Blob Storage and Azure Cosmos DB
 
+#### Architecture 
+
+![Architecture](./Deployment/images/secure-rest-api-app-arch.png)
+
 #### Deploy the architecture with connectivity and security 
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgailzmicrosoft%2FSampleSecureApiApp%2Fmain%2FDeployment%2Fmain.json)
