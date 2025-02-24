@@ -24,15 +24,15 @@ Secure Rest APIs hosted in Azure App Service. This is a sample architecture that
 
 ![Architecture](./Deployment/images/secure-rest-api-app-arch.png)
 
-#### Deploy the architecture with connectivity and security 
+#### Deploy the Architecture to Azure  
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgailzmicrosoft%2FSampleSecureApiApp%2Fmain%2FDeployment%2Fmain.json)
 
-**Deploy Code from GitHub**
+**Deploy Code from GitHub .zip File**
 
-In your local solution directory, change directory to **Deployment**. Run PowerShell script `deploy_zipfile_github.ps1`. It downloads the sample_app.zip file in Deployment directory, saves a temp file (remove it afterwards), and then deploy the temp file (.zip) to App Services.  
+Clone or download the repo to your computer. In your local solution directory, change directory to **Deployment**. Run PowerShell script `deploy_zipfile_github.ps1`. It downloads the sample_app.zip file in Deployment directory, saves a temp file (remove it afterwards), and then deploy the temp file (.zip) to App Services.  
 
-**Deploy Code from Local - if you have cloned the code**
+**Deploy Code from Local (Alternative) - If you have set up .NET C# Development Environment**
 
 In your local solution directory, change directory to **Deployment**. Run PowerShell script `build_zipfile.ps1` to rebuild the solution. Run `deploy_zipfile_local.ps1`  to deploy the new code as .zip file to your app service instance. 
 
