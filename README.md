@@ -14,6 +14,12 @@ Secure Rest APIs hosted in Azure App Service. This is a sample architecture that
 
 (3) Save mortgage loan application into Azure Blob Storage and Azure Cosmos DB
 
+(4) **Secure by design**: 
+
+1. All keys and end points are stored in Azure Key Vault during resource deployment (Deploy to Azure).
+2. The client must present api key in each request header, named x-api-key, to access any API hosted in App Services. 
+3. Resources accessed by App Services are set from deployment BICEP code using azure identity with 'role assignments'. 
+
 #### Architecture 
 
 ![Architecture](./Deployment/images/secure-rest-api-app-arch.png)
@@ -26,15 +32,15 @@ Secure Rest APIs hosted in Azure App Service. This is a sample architecture that
 
 In your local solution directory, change directory to **Deployment**. Run PowerShell script `deploy_zipfile_github.ps1`. It downloads the sample_app.zip file in Deployment directory, saves a temp file (remove it afterwards), and then deploy the temp file (.zip) to App Services.  
 
-**Deploy Code from Local - if you have cloned and updated the code**
+**Deploy Code from Local - if you have cloned the code**
 
 In your local solution directory, change directory to **Deployment**. Run PowerShell script `build_zipfile.ps1` to rebuild the solution. Run `deploy_zipfile_local.ps1`  to deploy the new code as .zip file to your app service instance. 
 
 #### **Test the App**
 
-Find the URL of your APP Service in Azure. The API Key is stored in your App Configurator as the value of '`x-api-key`'. When the API client invokes the API, the x-api-key value pair must be constructed in the header. You can use swagger interface to test the APIs on a browner with the address of the App Service [Sample App Services UI](https://your-app-service-instance-name.azurewebsites.net/index.html).
+Find the URL of your APP Service in Azure. The API Key is stored in the Azure Key Vault during the initial deployment as a secret named '`x-api-key`'. You can update the key in the key vault after permission/policy is set correctly. When the API client invokes the API, the `x-api-key` value pair must be constructed in the header. You can use swagger interface to test the APIs with the `url` of your App Services instance. 
 
 #### **Trouble Shooting**
 
-If you downloaded or cloned the code locally and want to test the code locally first. You need to set up key vault policy to allow you to read the key and secret in the key vault. 
+If you downloaded or cloned the code locally and want to test the code locally first, you need to set up key vault policy to allow you to read the key and secret in the key vault. You also need to configure this in your `appsettings.json` or `appsettings.Development.json`: "KEY_VAULT_URI": "https://yourvault.vault.azure.net/" so your local instance can access all the keys and end points stored in the key vault. 
 
