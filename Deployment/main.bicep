@@ -193,10 +193,10 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
   location: location
   kind: 'linux'
   sku: {
-    name: 'B3'
-    tier: 'Basic'
-    size: 'B3'
-    family: 'B'
+    name: 'P1v3'
+    tier: 'PremiumV3'
+    size: 'P1v3'
+    family: 'P'
     capacity: 1
   }
   properties: {
