@@ -20,6 +20,12 @@ Secure Rest APIs hosted in Azure App Service. This is a sample architecture that
 2. The client must present api key in each request header, named x-api-key, to access any API hosted in App Services. 
 3. Resources accessed by App Services are set from deployment BICEP code using azure identity with 'role assignments'. 
 
+#### Proposed Features 
+
+For initial business use case description, refer to [Proposed Use Case Description](./Deployment/docs/Copilot-AI-Pattern-Mortgage-Advisor-Solution.pdf) for more details. 
+
+If you are interested in enhance the architecture, you can use [Architecture Template](./Deployment/docs/Secure-Rest-Api-App.pptx) as a starting point. 
+
 #### Architecture 
 
 ![Architecture](./Deployment/images/secure-rest-api-app-arch.png)
