@@ -1,3 +1,8 @@
+//################################################################################################################################
+//# Author(s): Dr. Gail Zhou & GitHub CoPiLot
+//# Last Updated: March 2025
+//################################################################################################################################
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;

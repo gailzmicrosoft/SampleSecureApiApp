@@ -1,4 +1,10 @@
-﻿using Azure;
+﻿
+//################################################################################################################################
+//# Author(s): Dr. Gail Zhou & GitHub CoPiLot
+//# Last Updated: March 2025
+//################################################################################################################################
+
+using Azure;
 using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Microsoft.AspNetCore.Authorization;
