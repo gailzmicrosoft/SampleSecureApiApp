@@ -5,20 +5,10 @@
 //################################################################################################################################
 
 using Azure;
-using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using RestAPIs.Capabilities;
-using Microsoft.Azure.Cosmos;
-using Azure.AI.FormRecognizer.Models;
-using Microsoft.Azure.Cosmos.Linq;
+
 
 // this module needs additional work. This is a draft 
 namespace RestAPIs.Controllers

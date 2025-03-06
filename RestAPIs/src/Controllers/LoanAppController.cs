@@ -4,16 +4,11 @@
 //################################################################################################################################
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.Azure.Cosmos;
-using System;
 using RestAPIs.Capabilities;
-using System.Data;
 
 namespace RestAPIs.Controllers
 {

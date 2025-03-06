@@ -3,10 +3,6 @@
 //# Last Updated: March 2025
 //################################################################################################################################
 
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
-using Microsoft.Extensions.Configuration;
-
 namespace RestAPIs.Middleware
 {
     public class ApiKeyMiddleware
