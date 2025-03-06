@@ -2,6 +2,10 @@
 
 ## Sample Secure Rest API App (.NET 8 and C#)
 
+#### Disclaimer
+
+Please note that the architecture of this solution accelerator is built as a start up architecture framework and solution. The code serves as a demonstration only. 
+
 #### Basic features 
 
 Secure Rest APIs hosted in Azure App Service. This is a sample architecture that you can use as your foundational architectural components: Azure Storage, Azure App Services, Azure Document Intelligence, Azure Cosmos DB. More components will be added later such as integration with Azure Open AI or 3rd party LLMs running in Azure. 
